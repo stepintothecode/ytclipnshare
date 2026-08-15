@@ -1,0 +1,13 @@
+{
+  "name": "ytclipnshare",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Share a slice of any YouTube video. A web app for phones and a browser extension for desktop.",
+  "scripts": {
+    "test": "node --test \"test/**/*-tests.js\"",
+    "sync": "node tools/sync-core.mjs",
+    "sync:check": "node tools/sync-core.mjs --check",
+    "icons": "node tools/make-icons.mjs"
+  }
+}

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YTClipNShare - share a slice of any YouTube video</title>
+<meta name="description" content="Pick a start and end time on any YouTube video or Short, get a link that plays only that part.">
+<meta name="theme-color" content="#0f1115">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="YTClipNShare">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2b3140;
+    --text:#e8ecf3; --dim:#98a2b3; --accent:#ff3d3d; --accent2:#3d7bff;
+    --ok:#22c55e; --warn:#f59e0b; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 64px}
+
+  header{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  header h1{font-size:19px;margin:0;letter-spacing:-.2px}
+  header .logo{width:30px;height:30px;flex:0 0 auto}
+  header .tag{color:var(--dim);font-size:13px;margin:0}
+  header .spacer{flex:1}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+  label.lbl{display:block;font-size:13px;font-weight:600;color:var(--dim);margin-bottom:7px;letter-spacing:.2px}
+
+  .urlrow{display:flex;gap:8px}
+  input[type=text],input[type=url]{
+    flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);color:var(--text);
+    border-radius:10px;padding:13px 12px;font-size:16px;font-family:inherit;
+  }
+  input:focus-visible{outline:none;border-color:var(--accent2)}
+  button{
+    font:inherit;font-weight:600;border-radius:10px;cursor:pointer;
+    background:var(--panel2);color:var(--text);border:1px solid var(--line);
+    padding:13px 16px;min-height:46px;
+  }
+  button:active{transform:translateY(1px)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.ghost{background:transparent}
+  button:disabled{opacity:.45;cursor:not-allowed}
+
+  /* icon-only buttons */
+  .iconbtn{
+    width:38px;height:38px;min-height:0;padding:0;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;color:var(--dim);
+  }
+  .iconbtn:hover{color:var(--text);border-color:var(--dim)}
+  .iconbtn svg{width:19px;height:19px;display:block}
+
+  #stage{display:none}
+  #stage.on{display:block}
+
+  .playerbox{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;margin-bottom:6px}
+  .playerbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  /* dual range slider */
+  .slider{position:relative;height:44px;margin:14px 2px 2px}
+  .slider .track{position:absolute;top:20px;left:0;right:0;height:5px;background:var(--panel2);border-radius:4px}
+  .slider .fill{position:absolute;top:20px;height:5px;background:var(--accent);border-radius:4px}
+  .slider input[type=range]{
+    position:absolute;top:0;left:0;width:100%;height:44px;margin:0;
+    -webkit-appearance:none;appearance:none;background:none;pointer-events:none;
+  }
+  .slider input[type=range]:focus{outline:none}
+  .slider input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;pointer-events:auto;
+    width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--accent);
+    cursor:grab;box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .slider input[type=range]::-moz-range-thumb{
+    pointer-events:auto;width:22px;height:22px;border-radius:50%;background:#fff;
+    border:3px solid var(--accent);cursor:grab;box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .slider input[type=range]::-moz-range-track{background:none;border:none}
+
+  .times{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .timebox{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px}
+  .timebox .cap{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);margin-bottom:5px}
+  .timebox input{width:100%;background:none;border:none;color:var(--text);font-size:20px;
+    font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;padding:0}
+  .timebox input:focus{outline:none}
+  .timebox .set{margin-top:7px;width:100%;padding:8px;font-size:12.5px;min-height:0;background:transparent;color:var(--dim)}
+  .timebox .set:hover{color:var(--text);border-color:var(--dim)}
+
+  .meta{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--dim);font-size:13px;margin-top:10px;flex-wrap:wrap}
+  .len{color:var(--text);font-weight:600}
+  .len.bad{color:var(--warn)}
+
+  .btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .btnrow button{flex:1;min-width:130px}
+
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .opt{display:flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--line);
+    border-radius:999px;padding:8px 13px;font-size:13.5px;cursor:pointer;user-select:none}
+  .opt input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+
+  .out{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;
+    word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;line-height:1.55;color:#cfe0ff}
+  .outrow .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:8px}
+  .outrow .hd b{font-size:13.5px}
+  .outrow .hd span{font-size:12px;color:var(--dim);text-align:right}
+
+  /* collapsible fallback link */
+  .fallback{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+  .fallback summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;color:var(--dim);padding:3px 0;
+  }
+  .fallback summary::-webkit-details-marker{display:none}
+  .fallback summary:hover{color:var(--text)}
+  .fallback summary .chev{width:14px;height:14px;flex:0 0 auto;transition:transform .18s}
+  .fallback[open] summary .chev{transform:rotate(90deg)}
+  .fallback summary .why{font-weight:400;font-size:12px;color:var(--dim);margin-left:auto;text-align:right}
+  .fallback .body{padding-top:10px}
+
+  .note{font-size:12.5px;color:var(--dim);margin:10px 0 0}
+  .alert{border-radius:10px;padding:11px 13px;font-size:13.5px;margin-top:12px;display:none}
+  .alert.on{display:block}
+  .alert.warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);color:#fcd34d}
+  .alert.err{background:rgba(255,61,61,.12);border:1px solid rgba(255,61,61,.4);color:#fca5a5}
+
+  #toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--ok);color:#06240f;
+    font-weight:700;padding:11px 20px;border-radius:999px;opacity:0;transition:.22s;pointer-events:none;z-index:99;font-size:14px}
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+
+  /* hint dialog */
+  dialog{
+    background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+    padding:0;max-width:min(520px,calc(100vw - 32px));width:100%;
+  }
+  dialog::backdrop{background:rgba(0,0,0,.6)}
+  dialog .dlghd{display:flex;align-items:center;gap:10px;padding:16px 16px 0}
+  dialog h2{font-size:16px;margin:0;flex:1}
+  dialog .dlgbody{padding:12px 16px 16px;color:var(--dim);font-size:13.5px;line-height:1.65}
+  dialog .dlgbody b{color:var(--text)}
+  dialog .dlgbody p{margin:0 0 12px}
+  dialog .dlgbody p:last-child{margin-bottom:0}
+
+  @media (max-width:420px){
+    .btnrow button{flex:1 1 100%}
+    .timebox input{font-size:18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="logo" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+      <mask id="hdr-cut">
+        <rect width="512" height="512" fill="#fff"/>
+        <rect x="118" y="62" width="46" height="388" rx="23" fill="#000"/>
+        <rect x="348" y="62" width="46" height="388" rx="23" fill="#000"/>
+      </mask>
+      <rect x="64" y="150" width="384" height="212" rx="52" fill="#ff3d3d" mask="url(#hdr-cut)"/>
+      <path d="M222 205l86 51-86 51z" fill="#fff"/>
+      <rect x="128" y="72" width="26" height="368" rx="13" fill="#ff3d3d"/>
+      <rect x="358" y="72" width="26" height="368" rx="13" fill="#ff3d3d"/>
+    </svg>
+    <div>
+      <h1>YTClipNShare</h1>
+      <p class="tag">Share just the part that matters</p>
+    </div>
+    <div class="spacer"></div>
+    <button id="hintBtn" class="iconbtn" aria-label="What your friend sees" title="What your friend sees">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4"/>
+        <path d="M12 8h.01"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="card">
+    <label class="lbl" for="url">YouTube link (video or Short)</label>
+    <div class="urlrow">
+      <input id="url" type="url" inputmode="url" autocomplete="off" autocapitalize="off"
+             spellcheck="false" placeholder="Paste a link, or just the video ID">
+      <button id="load" class="primary">Load</button>
+    </div>
+    <div id="urlErr" class="alert err"></div>
+    <p class="note">Tip: on your phone, use YouTube's <b>Share → Copy link</b>, then paste here.</p>
+  </div>
+
+  <div id="stage">
+    <div class="card">
+      <div class="playerbox"><div id="player"></div></div>
+
+      <div class="slider" id="slider">
+        <div class="track"></div>
+        <div class="fill" id="fill"></div>
+        <input type="range" id="rStart" min="0" max="100" step="1" value="0" aria-label="Clip start">
+        <input type="range" id="rEnd"   min="0" max="100" step="1" value="100" aria-label="Clip end">
+      </div>
+
+      <div class="times">
+        <div class="timebox">
+          <div class="cap">Start</div>
+          <input id="tStart" type="text" inputmode="numeric" value="0:00" aria-label="Start time">
+          <button class="set" data-set="start">⤓ Use current time</button>
+        </div>
+        <div class="timebox">
+          <div class="cap">End</div>
+          <input id="tEnd" type="text" inputmode="numeric" value="0:00" aria-label="End time">
+          <button class="set" data-set="end">⤓ Use current time</button>
+        </div>
+      </div>
+
+      <div class="meta">
+        <span>Clip length: <span class="len" id="len">0:00</span></span>
+        <span id="dur"></span>
+      </div>
+
+      <div class="btnrow">
+        <button id="preview">▶︎ Preview clip</button>
+        <button id="nudgeBack" class="ghost">− 1s start</button>
+        <button id="nudgeFwd" class="ghost">+ 1s end</button>
+      </div>
+
+      <div id="embedWarn" class="alert warn"></div>
+    </div>
+
+    <div class="card">
+      <label class="lbl">Options</label>
+      <div class="opts">
+        <label class="opt"><input type="checkbox" id="oRel" checked> Hide related videos</label>
+        <label class="opt"><input type="checkbox" id="oLoop"> Loop the clip</label>
+        <label class="opt"><input type="checkbox" id="oAuto"> Autoplay (muted)</label>
+        <label class="opt"><input type="checkbox" id="oNoCookie"> Privacy mode</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="outrow">
+        <div class="hd"><b>Clip link</b><span>starts and stops where you set</span></div>
+        <div class="out" id="outClip">-</div>
+        <div class="btnrow">
+          <button id="copyClip" class="primary">Copy link</button>
+          <button id="shareClip">Share…</button>
+          <button id="openClip" class="ghost">Test it</button>
+        </div>
+      </div>
+
+      <details class="fallback" id="fallback">
+        <summary>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+          Fallback link
+          <span class="why">if embedding is blocked</span>
+        </summary>
+        <div class="body">
+          <div class="out" id="outFallback">-</div>
+          <div class="btnrow">
+            <button id="copyFallback">Copy fallback</button>
+          </div>
+          <p class="note">Opens the video normally at your start time. No end time, but it works everywhere.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div id="toast">Copied</div>
+</div>
+
+<dialog id="hintDlg">
+  <div class="dlghd">
+    <h2>What your friend sees</h2>
+    <button id="hintClose" class="iconbtn" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  <div class="dlgbody">
+    <p>
+      The clip link opens a plain YouTube player that begins at your start time and <b>stops</b> at your end
+      time. It is playback control, not a real trim. The scrub bar is still there, so they <i>could</i> drag
+      past the end. Good for "watch this bit", not a way to hide the rest of the video.
+    </p>
+    <p>
+      <b>Shorts:</b> a Short's clip link plays in a normal landscape player, not the vertical Shorts feed.
+      The right part plays, it just doesn't look like Shorts.
+    </p>
+    <p>
+      <b>If a creator has disabled embedding,</b> the clip link shows an error for them. Send the fallback
+      link instead. It opens the video normally at your start time.
+    </p>
+  </div>
+</dialog>
+
+<script type="module" src="src/ui.js"></script>
+</body>
+</html>

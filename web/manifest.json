@@ -1,6 +1,6 @@
 {
-  "name": "Clipper — YouTube clip links",
-  "short_name": "Clipper",
+  "name": "YTClipNShare - YouTube clip links",
+  "short_name": "YTClipNShare",
   "description": "Pick a start and end time on any YouTube video or Short, get a link that plays only that part.",
   "start_url": "./index.html",
   "scope": "./",
@@ -10,15 +10,27 @@
   "theme_color": "#0f1115",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "icons/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "icon-maskable.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ],
@@ -27,7 +39,7 @@
     "method": "GET",
     "params": {
       "title": "title",
-      "text": "v",
+      "text": "text",
       "url": "v"
     }
   }

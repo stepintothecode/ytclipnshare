@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Android crops this to its own shape, so it needs a solid background and
+       the icon kept inside the middle 80%. -->
+  <mask id="bars-cut-maskable">
+    <rect width="512" height="512" fill="#fff"/>
+    <rect x="158" y="132" width="36" height="248" rx="18" fill="#000"/>
+    <rect x="318" y="132" width="36" height="248" rx="18" fill="#000"/>
+  </mask>
+  <rect width="512" height="512" fill="#ff3d3d"/>
+  <rect x="122" y="186" width="268" height="148" rx="36" fill="#ffffff" mask="url(#bars-cut-maskable)"/>
+  <path d="M233 224l62 36-62 36z" fill="#ff3d3d"/>
+  <rect x="166" y="140" width="20" height="232" rx="10" fill="#ffffff"/>
+  <rect x="326" y="140" width="20" height="232" rx="10" fill="#ffffff"/>
+</svg>
