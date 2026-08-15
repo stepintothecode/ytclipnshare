@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy policy - YTClipNShare</title>
+<meta name="description" content="What YTClipNShare reads, and why none of it leaves your device.">
+<meta name="theme-color" content="#0f1115">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --line:#2b3140;
+    --text:#e8ecf3; --dim:#98a2b3; --accent:#ff3d3d; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:36px 16px 72px}
+
+  h1{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+  .updated{color:var(--dim);font-size:13.5px;margin:0 0 26px}
+  h2{font-size:16px;margin:30px 0 8px;letter-spacing:-.1px}
+  p,li{color:var(--dim);margin:0 0 12px}
+  li{margin-bottom:6px}
+  ul{padding-left:20px;margin:0 0 12px}
+  b{color:var(--text);font-weight:600}
+  a{color:#8ab4ff}
+
+  .summary{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .summary p{margin:0;color:var(--text)}
+
+  .todo{color:#fcd34d;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);
+    border-radius:6px;padding:1px 7px;font-weight:600;font-size:14px}
+
+  footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px}
+  footer a{color:var(--dim);text-decoration:none}
+  footer a:hover{color:var(--text);text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Privacy policy</h1>
+  <p class="updated">
+    YTClipNShare browser extension and web app. Last updated
+    <span class="todo">TODO: date, for example 15 August 2026</span>
+  </p>
+
+  <div class="summary">
+    <p>
+      YTClipNShare does not collect, store or transmit any personal information.
+      Everything it reads stays on your device and is gone the moment you close it.
+      There are no accounts, no servers, no analytics and no ads.
+    </p>
+  </div>
+
+  <h2>What it reads</h2>
+  <p>To turn a video into a clip link, YTClipNShare reads:</p>
+  <ul>
+    <li>The address of the YouTube video you are on, and the video ID inside it</li>
+    <li>The current playhead position and the total length of that video</li>
+    <li>The start and end times you choose, and the four clip options you tick</li>
+  </ul>
+  <p>
+    That is the whole list. It does not read anything else on the page, does not
+    look at other tabs, and does not touch your browsing history, bookmarks,
+    downloads or YouTube account.
+  </p>
+  <p>
+    In the Chrome Web Store's own categories this is declared as
+    <b>Website content</b>, because the address and the player state are read from
+    the page you are on. No other category is handled.
+  </p>
+
+  <h2>When it reads it</h2>
+  <p>
+    <b>Only when you ask.</b> The extension does nothing until you click its icon in
+    the toolbar. It has no content script running in the background, so on every
+    other page and at every other moment it is inert. In the web app, nothing is
+    read until you paste a link and press Load.
+  </p>
+
+  <h2>What happens to it</h2>
+  <p>
+    It is used in the popup or the page to build your clip link, and then it is
+    discarded. Nothing is written to disk, nothing is kept between sessions, and
+    nothing is sent anywhere. There is no server behind YTClipNShare to send it to.
+  </p>
+  <p>
+    The link you generate is yours. It is placed on your clipboard when you press
+    Copy, and nobody else sees it unless you share it.
+  </p>
+
+  <h2>What it never does</h2>
+  <ul>
+    <li>No accounts, sign-in or personal details</li>
+    <li>No analytics, telemetry, tracking pixels or fingerprinting</li>
+    <li>No cookies or local storage used to identify you</li>
+    <li>No advertising, and no data sold or shared with anyone</li>
+    <li>No remote code. Every line ships inside the package you installed</li>
+  </ul>
+  <p>
+    In the terms Google uses: data handled by this extension is used only for the
+    single purpose described above, is never sold or transferred to third parties,
+    and is never used to determine creditworthiness or for lending purposes.
+  </p>
+
+  <h2>Permissions, and why each one exists</h2>
+  <ul>
+    <li>
+      <b>activeTab</b> lets the extension see the address and player of the one tab
+      you are on, and only after you click the icon. This is what makes pasting a
+      link unnecessary.
+    </li>
+    <li>
+      <b>scripting</b> lets it run a small script in that same tab to read the
+      playhead and duration, and to seek while you preview your clip.
+    </li>
+  </ul>
+  <p>
+    There are no host permissions, so the extension has no standing access to any
+    site, including YouTube.
+  </p>
+
+  <h2>Other services</h2>
+  <ul>
+    <li>
+      <b>YouTube.</b> Clips play in YouTube's own embedded player. Once a video is
+      playing, Google's
+      <a href="https://policies.google.com/privacy">privacy policy</a> applies to
+      that playback, exactly as it would on youtube.com. Ticking <b>Privacy</b> in
+      the clip options uses youtube-nocookie.com instead.
+    </li>
+    <li>
+      <b>GitHub Pages.</b> The web app and this page are static files hosted by
+      GitHub, which may log requests as any web host does. See
+      <a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement">GitHub's privacy statement</a>.
+    </li>
+    <li>
+      <b>The support link.</b> Choosing to open it takes you to a page listing ways
+      to tip. It carries only the name of the app you clicked from, so the page can
+      say thank you. Nothing about you or your browsing goes with it.
+    </li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>
+    YTClipNShare is not directed at children and collects nothing from anyone,
+    regardless of age.
+  </p>
+
+  <h2>Changes</h2>
+  <p>
+    If this policy ever changes, the date at the top changes with it, and the
+    previous wording stays in the project's public commit history.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about this policy:
+    <span class="todo">TODO: contact email</span><br>
+    Source code and issues:
+    <a href="https://github.com/stepintothecode/ytclipnshare">github.com/stepintothecode/ytclipnshare</a>
+  </p>
+
+  <footer>
+    <a href="./">&lsaquo; Back to YTClipNShare</a>
+  </footer>
+</div>
+</body>
+</html>
