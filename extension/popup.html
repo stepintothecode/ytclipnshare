@@ -144,6 +144,8 @@
   dialog .dlgbody b{color:var(--text)}
   dialog .dlgbody p{margin:0 0 10px}
   dialog .dlgbody p:last-child{margin-bottom:0}
+  dialog .dlgfoot{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:11.5px}
+  dialog .dlgfoot a{color:var(--accent2)}
 </style>
 </head>
 <body>
@@ -285,6 +287,11 @@
     <p>
       <b>If a creator has disabled embedding,</b> the clip link shows an error for them. Send the
       fallback link instead. It opens the video normally at your start time.
+    </p>
+    <p class="dlgfoot">
+      This extension reads the tab only when you click its icon, and stores nothing.
+      <a href="https://stepintothecode.github.io/ytclipnshare/web/privacy.html"
+         target="_blank" rel="noopener">Privacy policy</a>
     </p>
   </div>
 </dialog>

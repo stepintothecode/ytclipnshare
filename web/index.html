@@ -163,6 +163,8 @@
   dialog .dlgbody b{color:var(--text)}
   dialog .dlgbody p{margin:0 0 12px}
   dialog .dlgbody p:last-child{margin-bottom:0}
+  dialog .dlgfoot{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px}
+  dialog .dlgfoot a{color:var(--accent2)}
 
   @media (max-width:420px){
     .btnrow button{flex:1 1 100%}
@@ -318,6 +320,10 @@
     <p>
       <b>If a creator has disabled embedding,</b> the clip link shows an error for them. Send the fallback
       link instead. It opens the video normally at your start time.
+    </p>
+    <p class="dlgfoot">
+      Nothing you do here is stored or sent anywhere.
+      <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a>
     </p>
   </div>
 </dialog>
