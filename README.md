@@ -51,3 +51,11 @@ redirects there.
 - Some creators block embedding. Both apps warn you and offer a fallback link
   that opens the video at your start time.
 - Nothing is downloaded. If the original video goes, so does your link.
+
+## Support
+
+YTClipNShare is free, ad-free and has no tracking. If it saved you time, there
+is a [tip jar](https://stepintothecode.github.io/support/?from=ytclipnshare-web).
+
+This is a voluntary tip, not a purchase. It buys no features, no support and no
+influence over the project. YTClipNShare is free and stays free.

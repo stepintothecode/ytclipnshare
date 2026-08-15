@@ -5,6 +5,7 @@ import { parseVideoReference } from '../core/video-reference.js';
 import { buildLinks, DEFAULT_OPTIONS } from '../core/youtube-embed.js';
 import { formatClock, parseClock } from '../core/time.js';
 import { TabPlayer } from './tab-player.js';
+import { mountSupportFooter } from './support-footer.js';
 
 const el = (id) => document.getElementById(id);
 
@@ -15,6 +16,8 @@ const state = {
   player: /** @type {TabPlayer|null} */ (null),
   previewing: false,
 };
+
+mountSupportFooter(el('support'), 'extension');
 
 /* ---------- rendering ---------- */
 

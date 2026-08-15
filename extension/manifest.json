@@ -1,8 +1,11 @@
 {
   "manifest_version": 3,
   "name": "YTClipNShare - YouTube clip links",
-  "version": "2.0.0",
+  "short_name": "YTClipNShare",
+  "version": "2.1.0",
   "description": "Pick a start and end time on the YouTube video you're watching, get a link that plays only that part.",
+  "homepage_url": "https://stepintothecode.github.io/ytclipnshare/",
+  "minimum_chrome_version": "88",
   "action": {
     "default_title": "YTClipNShare",
     "default_popup": "popup.html",

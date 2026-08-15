@@ -6,6 +6,7 @@ import { buildLinks, DEFAULT_OPTIONS } from '../../core/youtube-embed.js';
 import { formatClock, parseClock } from '../../core/time.js';
 import { describeFailure } from '../../core/player-port.js';
 import { IframePlayer } from './iframe-player.js';
+import { mountSupportFooter } from './support-footer.js';
 
 const el = (id) => document.getElementById(id);
 
@@ -17,6 +18,8 @@ const state = {
 
 const player = new IframePlayer('player');
 player.onFailure((error) => showAlert('embedWarn', describeFailure(error.reason)));
+
+mountSupportFooter(el('support'), 'web');
 
 /* ---------- rendering ---------- */
 
